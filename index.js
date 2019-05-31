@@ -62,19 +62,6 @@ app.get('/all', (req,res) => {
 
 });
 
-app.get('/', (req,res) => {
-
-    Contact.find({}).exec((error, contact) => {
-
-        if (error){
-            return res.status(404).json({message: "Error: "+error})
-        }
-
-        return res.json({contact});
-    });
-
-});
-
 app.post('/getmany', (req,res) => {
 
     const ids = req.body.ids;
@@ -226,11 +213,6 @@ app.delete('/delete/:id', (req,res) => {
         return res.json({contact});
     });
 
-});
-
-
-app.get('/', (req,res) => {
-    return res.json({message: "Hello World 2"});
 });
 
 const PORT = process.env.PORT || 5000;
