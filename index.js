@@ -112,6 +112,7 @@ app.post('/add', (req,res) => {
 
 });
 
+/*
 app.put('/update/:id', (req,res) => {
 
     if (req.params.id){
@@ -158,12 +159,12 @@ app.put('/update/:id', (req,res) => {
         });
 
     });
-});
+});*/
 
 app.post('/update', (req,res) => {
 
     if (req.body.id){
-        return res.send(req); //res.status(403).json({message: "Please provide an id"})
+        return res.status(403).json({message: "Please provide an id"})
     }
 
     Contact.findOne({id: req.body.id}).exec((error, contact) => {
