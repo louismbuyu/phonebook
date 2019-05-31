@@ -9,7 +9,7 @@ mongoose.connect(keys.MONGO_URL, { useNewUrlParser: true });
 app.use(bodyParser.json());
 
 app.get('/', (req,res) => {
-    return res.json({message: "Hello World"});
+    return res.json({message: "Hello World!"});
 });
 
 app.get('/test', (req,res) => {
