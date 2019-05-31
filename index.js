@@ -31,7 +31,7 @@ app.get('/get/:id', (req,res) => {
 
 app.get('/:id', (req,res) => {
 
-    if (req.query.id){
+    if (!req.query.id){
         return res.status(403).json({message: "Please provide an id"})
     }
 
@@ -99,7 +99,6 @@ app.post('/add', (req,res) => {
         location: req.body.location,
         favorite: req.body.favorite
     });
-    console.log(newContact);
 
     newContact.save( (error, savedContact) => {
 
