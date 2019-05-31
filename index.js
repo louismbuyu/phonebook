@@ -31,7 +31,10 @@ app.get('/get/:id', (req,res) => {
 
 app.get('/:id', (req,res) => {
 
-    if (!req.query.id){
+    //console.log();
+    return res.json({message: "Please provide an id", id: req.query.id});
+
+    /*if (!req.query.id){
         return res.status(403).json({message: "Please provide an id"})
     }
 
@@ -42,7 +45,7 @@ app.get('/:id', (req,res) => {
         }
 
         return res.json({contact});
-    });
+    });*/
 
 });
 
