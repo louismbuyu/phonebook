@@ -115,7 +115,7 @@ app.post('/add', (req,res) => {
 app.put('/update/:id', (req,res) => {
 
     if (req.params.id){
-        return res.status(403).json({message: "Please provide an id"})
+        return res.json({req}); //res.status(403).json({message: "Please provide an id"})
     }
 
     Contact.findOne({id: req.params.id}).exec((error, contact) => {
