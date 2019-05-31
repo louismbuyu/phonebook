@@ -163,7 +163,7 @@ app.put('/update/:id', (req,res) => {
 
 app.post('/update', (req,res) => {
 
-    if (req.body.id){
+    if (!req.body.id){
         return res.status(403).json({message: "Please provide an id"})
     }
 
