@@ -8,75 +8,36 @@ const app = express();
 mongoose.connect(keys.MONGO_URL, { useNewUrlParser: true });
 app.use(bodyParser.json());
 
+app.get('/', (req,res) => {
+    return res.json({message: "Hello World"});
+});
+
 app.get('/test', (req,res) => {
-    return res.json({message: "Hello World 4"});
+    return res.json({message: "Test success"});
+});
+
+app.get('/all', (req,res) => {
+    Contact.find({}).exec((error, contacts) => {
+        if (error){
+            return res.status(404).json({message: "Error: "+error})
+        }
+        return res.json({contacts});
+    });
 });
 
 app.get('/get/:id', (req,res) => {
 
-    if (req.query.id){
+    if (!req.params.id){
         return res.status(403).json({message: "Please provide an id"})
     }
 
-    Contact.findOne({id: req.query.id}).exec((error, contact) => {
+    Contact.findOne({_id: req.params.id}).exec((error, contact) => {
 
         if (error){
             return res.status(404).json({message: "Error: "+error})
         }
 
         return res.json({contact});
-    });
-
-});
-
-app.get('/:id', (req,res) => {
-
-    //console.log();
-    return res.json({message: "Please provide an id", id: req.query.id});
-
-    /*if (!req.query.id){
-        return res.status(403).json({message: "Please provide an id"})
-    }
-
-    Contact.findOne({id: req.query.id}).exec((error, contact) => {
-
-        if (error){
-            return res.status(404).json({message: "Error: "+error})
-        }
-
-        return res.json({contact});
-    });*/
-
-});
-
-app.get('/all', (req,res) => {
-
-    Contact.find({}).exec((error, contact) => {
-
-        if (error){
-            return res.status(404).json({message: "Error: "+error})
-        }
-
-        return res.json({contact});
-    });
-
-});
-
-app.post('/getmany', (req,res) => {
-
-    const ids = req.body.ids;
-
-    if (req.body.ids){
-        return res.status(403).json({message: "Please provide ids"})
-    }
-
-    Contact.find({id: ids}).exec((error, contacts) => {
-
-        if (error){
-            return res.status(404).json({message: "Error: "+error})
-        }
-
-        return res.json({contacts});
     });
 });
 
@@ -101,14 +62,14 @@ app.post('/add', (req,res) => {
 
 });
 
-/*
+
 app.put('/update/:id', (req,res) => {
 
-    if (req.params.id){
-        return res.send(req); //res.status(403).json({message: "Please provide an id"})
+    if (!req.params.id){
+        return res.status(403).json({message: "Please provide an id"});
     }
 
-    Contact.findOne({id: req.params.id}).exec((error, contact) => {
+    Contact.findOne({_id: req.params.id}).exec((error, contact) => {
 
         if (error){
             return res.status(404).json({message: "Error: "+error})
@@ -138,56 +99,7 @@ app.put('/update/:id', (req,res) => {
             contact.favorite = req.body.favorite;
         }
 
-        contact.save().exec((error, savedContact) => {
-
-            if (error){
-                return res.status(404).json({message: "Error: "+error})
-            }
-
-            return res.json({contact: savedContact});
-        });
-
-    });
-});*/
-
-app.post('/update', (req,res) => {
-
-    if (!req.body.id){
-        return res.status(403).json({message: "Please provide an id"})
-    }
-
-    Contact.findOne({id: req.body.id}).exec((error, contact) => {
-
-        if (error){
-            return res.status(404).json({message: "Error: "+error})
-        }
-
-        if (!contact){
-            return res.status(404).json({message: "Contact not found"});
-        }
-
-        if (req.body.firstName) {
-            contact.firstName = req.body.firstName;
-        }
-
-        if (req.body.lastName) {
-            contact.lastName = req.body.lastName;
-        }
-
-        if (req.body.age) {
-            contact.age = req.body.age;
-        }
-
-        if (req.body.location) {
-            contact.location = req.body.location;
-        }
-
-        if (req.body.favorite) {
-            contact.favorite = req.body.favorite;
-        }
-
-        contact.save().exec((error, savedContact) => {
-
+        contact.save((error,savedContact) => {
             if (error){
                 return res.status(404).json({message: "Error: "+error})
             }
@@ -200,17 +112,45 @@ app.post('/update', (req,res) => {
 
 app.delete('/delete/:id', (req,res) => {
 
-    if (req.query.id){
+    if (!req.params.id){
         return res.status(403).json({message: "Please provide an id"})
     }
 
-    Contact.findOneAndRemove({id: req.query.id}).exec((error, contact) => {
+    Contact.findOneAndRemove({_id: req.params.id}).exec((error, contact) => {
 
         if (error){
             return res.status(404).json({message: "Error: "+error})
         }
 
         return res.json({contact});
+    });
+
+});
+
+app.delete('/delete/:id', (req,res) => {
+
+    if (!req.params.id){
+        return res.status(403).json({message: "Please provide an id"})
+    }
+
+    Contact.findOneAndRemove({_id: req.params.id}).exec((error, contact) => {
+
+        if (error){
+            return res.status(404).json({message: "Error: "+error})
+        }
+
+        return res.json({contact});
+    });
+
+});
+
+app.delete('/deleteall', (req,res) => {
+
+    Contact.deleteMany({}).exec((error, contacts) => {
+        if (error){
+            return res.status(404).json({message: "Error: "+error})
+        }
+        return res.json({message: "All contacts have been deleted"});
     });
 
 });
