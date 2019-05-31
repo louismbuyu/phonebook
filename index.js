@@ -114,18 +114,18 @@ app.post('/add', (req,res) => {
 
 app.put('/update/:id', (req,res) => {
 
-    if (req.query.id){
+    if (req.params.id){
         return res.status(403).json({message: "Please provide an id"})
     }
 
-    Contact.findOne({id: req.query.id}).exec((error, contact) => {
+    Contact.findOne({id: req.params.id}).exec((error, contact) => {
 
         if (error){
             return res.status(404).json({message: "Error: "+error})
         }
 
-        if (contact){
-
+        if (!contact){
+            return res.status(404).json({message: "Contact not found"});
         }
 
         if (req.body.firstName) {
@@ -158,7 +158,6 @@ app.put('/update/:id', (req,res) => {
         });
 
     });
-
 });
 
 app.delete('/delete/:id', (req,res) => {
